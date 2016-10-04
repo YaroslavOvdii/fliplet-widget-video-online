@@ -13,7 +13,8 @@
       "fliplet-studio-ui"
     ],
     "assets": [
-      "js/interface.js"
+      "js/interface.js",
+      "css/interface.css"
     ]
   },
   "build": {
@@ -21,8 +22,6 @@
       "jquery",
       "bootstrap"
     ],
-    "assets": [
-      "css/build.css"
-    ]
+    "assets": []
   }
 }

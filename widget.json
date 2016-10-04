@@ -22,6 +22,8 @@
       "jquery",
       "bootstrap"
     ],
-    "assets": []
+    "assets": [
+      "css/build.css"
+    ]
   }
 }

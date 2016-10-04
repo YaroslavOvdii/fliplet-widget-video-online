@@ -1,0 +1,23 @@
+.video-placeholder {
+    border: 1px solid #cccccc;
+    background-color: rgba(217, 221, 222, 0.5);
+    text-align: center;
+    height: 200px;
+    color: #333333;
+    font-size: 32px;
+    cursor: pointer;
+    -webkit-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-user-modify: read-only !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.video-placeholder:after {
+    content: "\f16a";
+    font-size: inherit;
+    -webkit-font-smoothing: antialiased;
+    font-family: FontAwesome;
+    font-size: 50px;
+}

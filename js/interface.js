@@ -11,7 +11,6 @@ Fliplet.Widget.onSaveRequest(function () {
 function save(notifyComplete) {
   Fliplet.Widget.save(data).then(function () {
     if (notifyComplete) {
-      Fliplet.Studio.emit('reload-page-preview');
       Fliplet.Widget.complete();
     } else {
       Fliplet.Studio.emit('reload-widget-instance', widgetId);
@@ -46,6 +45,7 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
 
           var orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
           var bootstrapHtml = '<div class="embed-responsive embed-responsive-orientation">iframehtml</div>';
+          data.url = url;
           data.html = bootstrapHtml
             .replace("iframehtml", response.html)
             .replace("orientation", orientation)

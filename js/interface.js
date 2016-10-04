@@ -3,6 +3,11 @@ var data = Fliplet.Widget.getData(widgetId) || {};
 var TIMEOUT_BUFFER = 1000; // Timeout buffer in ms
 var timer = null;
 
+// 1. Fired from Fliplet Studio when the external save button is clicked
+Fliplet.Widget.onSaveRequest(function () {
+  save(true);
+});
+
 function save(notifyComplete) {
   Fliplet.Widget.save(data).then(function () {
     if (notifyComplete) {
@@ -46,12 +51,12 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
             .replace("orientation", orientation)
             .replace("//cdn", "https://cdn");
           changeStates(true);
-          save();
+          save(false);
         })
         .catch(function () {
           data.html = '';
           changeStates(false);
-          save();
+          save(false);
         });
     }, TIMEOUT_BUFFER);
   }

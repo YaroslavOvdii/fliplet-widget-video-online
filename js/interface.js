@@ -42,16 +42,19 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
     timer = setTimeout(function() {
       oembed(url)
         .then(function(response) {
-
-          var orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
-          var bootstrapHtml = '<div class="embed-responsive embed-responsive-orientation">iframehtml</div>';
+          var bootstrapHtml = '<div class="embed-responsive embed-responsive-orientation">html</div>';
+          data.orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
+          data.embedly = response;
           data.url = url;
-          data.html = bootstrapHtml
-            .replace("iframehtml", response.html)
-            .replace("orientation", orientation)
+          data.video_html = bootstrapHtml
+            .replace("html", response.html)
+            .replace("orientation", data.orientation)
             .replace("//cdn", "https://cdn");
           changeStates(true);
           save(false);
+          toDataUrl(response.thumbnail_url, function(base64Img) {
+            data.thumbnail_base64 = base64Img;
+          });
         })
         .catch(function () {
           data.html = '';
@@ -84,4 +87,19 @@ function removeFinalStates() {
   } else if ($('.video-states .success').hasClass('show')) {
     $('.video-states .success').removeClass('show');
   }
+}
+
+// http://stackoverflow.com/a/20285053/1978835
+function toDataUrl(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  xhr.onload = function() {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      callback(reader.result);
+    };
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.send();
 }

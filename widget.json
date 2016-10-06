@@ -20,9 +20,11 @@
   "build": {
     "dependencies": [
       "jquery",
-      "bootstrap"
+      "bootstrap",
+      "fliplet-core"
     ],
     "assets": [
+      "js/build.js",
       "css/build.css"
     ]
   }

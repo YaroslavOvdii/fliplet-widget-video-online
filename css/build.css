@@ -16,8 +16,34 @@
 }
 .video-placeholder:after {
     content: "\f16a";
-    font-size: inherit;
     -webkit-font-smoothing: antialiased;
     font-family: FontAwesome;
     font-size: 50px;
+}
+.fl-video-thumb-holder {
+    position: relative;
+}
+.fl-video-thumb-holder:after {
+    content: "\f01d";
+    position: absolute;
+    -webkit-font-smoothing: antialiased;
+    font-family: FontAwesome;
+    font-size: 80px;
+    line-height: 80px;
+    text-align: center;
+    width: 80px;
+    height: 80px;
+    top: calc(50% - 40px);
+    left: calc(50% - 40px);
+    color: #FFF;
+    -webkit-text-shadow: 0 0 15px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    text-shadow: 0 0 15px rgba(0,0,0,0.5);
+    cursor: pointer;
+    pointer-events: none;
+}
+.fl-video-thumb-holder img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
 }

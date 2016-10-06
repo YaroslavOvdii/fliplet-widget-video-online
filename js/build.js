@@ -7,7 +7,7 @@ $('[data-video-online-id]').each(function () {
       if (Fliplet.Navigator.isOnline()) {
         $el.html(data.video_html);
       } else {
-        Fliplet.Navigator.popup({
+        Fliplet.Navigate.popup({
           popupTitle: 'Internet Unavailable',
           popupMessage: 'This video requires Internet to play. Please try again when Internet is available.'
         });

@@ -1,6 +1,6 @@
 {
   "name": "Online Video",
-  "package": "fliplet-widget-video-online",
+  "package": "fliplet-widget-online-video",
   "version": "1.0.0",
   "icon": "img/icon.png",
   "tags": ["type:component", "category:general"],

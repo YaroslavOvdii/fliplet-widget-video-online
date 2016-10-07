@@ -22,6 +22,7 @@
 }
 .fl-video-thumb-holder {
     position: relative;
+    text-align: center;
 }
 .fl-video-thumb-holder:after {
     content: "\f01d";

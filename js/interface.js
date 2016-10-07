@@ -100,6 +100,7 @@ function toDataUrl(url, callback) {
     };
     reader.readAsDataURL(xhr.response);
   };
-  xhr.open('GET', url);
+  xhr.open('GET', Fliplet.Env.get('apiUrl') + 'v1/communicate/proxy/' + url);
+  xhr.setRequestHeader('auth-token', Fliplet.User.getAuthToken());
   xhr.send();
 }

@@ -51,9 +51,9 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
             .replace("orientation", data.orientation)
             .replace("//cdn", "https://cdn");
           changeStates(true);
-          save(false);
           toDataUrl(response.thumbnail_url, function(base64Img) {
             data.thumbnail_base64 = base64Img;
+            save(false);
           });
         })
         .catch(function () {

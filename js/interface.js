@@ -21,7 +21,8 @@ function save(notifyComplete) {
 function oembed(url) {
   var params = {
     url: url,
-    key: "81633801114e4d9f88027be15efb8169"
+    key: "81633801114e4d9f88027be15efb8169",
+    autoplay: true
   };
   return $.getJSON('https://api.embedly.com/1/oembed?' + $.param(params));
 }

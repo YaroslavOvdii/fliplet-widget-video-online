@@ -5,11 +5,13 @@
     padding: 0 15px;
     border: none;
 }
+
 .btn-default {
     color: #333;
     background-color: #e4e9eb;
     border-bottom: 2px solid #cfd3d5;
 }
+
 .btn-default:active,
 .btn-default:active:focus,
 .btn-default:active:hover,
@@ -20,11 +22,13 @@
     border-color: #cfd3d5;
     outline: none;
 }
+
 .btn-primary {
     color: #FFF;
     background-color: #00abd2;
     border-bottom: 2px solid #0087a6;
 }
+
 .btn-primary:active,
 .btn-primary:active:focus,
 .btn-primary:active:hover,
@@ -35,11 +39,13 @@
     border-color: #0087a6;
     outline: none;
 }
+
 .btn-danger {
     color: #FFF;
     background-color: #d9534f;
     border-bottom: 2px solid #c9302c;
 }
+
 .btn-danger:active,
 .btn-danger:active:focus,
 .btn-danger:active:hover,
@@ -50,10 +56,12 @@
     border-color: #c9302c;
     outline: none;
 }
+
 .btn-link,
 a {
     color: #00abd1;
 }
+
 header {
     display: flex;
     font-size: 1em;
@@ -61,37 +69,47 @@ header {
     margin-bottom: 3rem;
     padding-bottom: 1.5em;
 }
+
 header.titles {
     font-weight: bold;
 }
+
 header p {
     flex: 1;
     margin: 0 1.4rem 0 0;
 }
+
 header a {
     text-decoration: none;
 }
+
 .widget-holder {
     padding: 15px;
 }
+
 .image-holder {
     text-align: center;
 }
+
 .image-holder img {
     max-width: 100%;
 }
+
 .form-group.multiple-fields,
 .form-group.single-field {
     margin-top: 30px;
 }
+
 .helper-holder {
     margin-top: 5px;
     font-size: 0.9em;
 }
+
 .helper-holder #add-multiple,
 .helper-holder #add-single {
     float: right;
 }
+
 .video-states {
     width: 44px;
     text-align: center;
@@ -99,25 +117,31 @@ header a {
     line-height: 42px;
     font-size: 18px;
 }
+
 .video-states .fail,
 .video-states .loading,
 .video-states .success {
     display: none;
 }
+
 .video-states .initial {
     color: #333;
 }
+
 .video-states .success {
     color: #3c763d;
 }
+
 .video-states .fail {
     color: #c9302c;
 }
+
 .streaming-video-loader {
     position: relative;
     width: 43px;
     height: 42px;
 }
+
 .streaming-video-loader div {
     position: absolute;
     top: 4px;
@@ -127,6 +151,7 @@ header a {
     background: url('https://imgh.us/ring-alt_(5).svg') center center no-repeat;
     background-size: contain;
 }
+
 .error {
     display: none;
     margin: 10px 0;
@@ -136,14 +161,17 @@ header a {
     margin-left: -15px;
     margin-right: -15px;
 }
+
 .control-label {
     padding-top: 13px;
     text-align: right;
 }
+
 label {
     font-weight: normal;
     color: #14505e;
 }
+
 .form-control {
     border-radius: 6px;
     border: 1px solid #e4e9eb;
@@ -154,35 +182,44 @@ label {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
 textarea.form-control {
     line-height: 24px;
 }
+
 .form-control:focus {
     border-color: #00abd2;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 171, 210, .6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 171, 210, .6);
 }
+
 .input-group {
     width: 100%;
 }
+
 .input-group-addon {
     background-color: #e4e9eb;
     border: 1px solid #e4e9eb;
 }
+
 .input-group-addon:last-child {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
 }
+
 .radio input {
     display: none;
 }
+
 .radio {
     float: left;
     margin: 0;
 }
+
 .radio + .radio {
     margin: 0;
 }
+
 .radio label {
     position: relative;
     height: 44px;
@@ -194,24 +231,23 @@ textarea.form-control {
     margin-left: 0;
     margin-bottom: 0;
 }
+
 .radio:first-child label {
     border-right: none;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 }
+
 .radio:last-child label {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
 }
+
 .radio input[type="radio"]:checked + label {
     background-color: #00abd2;
     color: #FFF;
 }
+
 .help-block {
     font-size: 0.8em;
-}
-@media only screen and (min-width: 640px) {
-    header {
-        font-size: 1.0em;
-    }
 }

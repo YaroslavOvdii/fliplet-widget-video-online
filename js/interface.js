@@ -3,6 +3,8 @@ var data = Fliplet.Widget.getData(widgetId) || {};
 var TIMEOUT_BUFFER = 1000; // Timeout buffer in ms
 var timer = null;
 
+var $refresh = $('[data-refresh]');
+
 // 1. Fired from Fliplet Studio when the external save button is clicked
 Fliplet.Widget.onSaveRequest(function () {
   save(true);
@@ -27,22 +29,35 @@ function oembed(url) {
   return $.getJSON('https://api.embedly.com/1/oembed?' + $.param(params));
 }
 
+if (data.url) {
+  $refresh.removeClass('hidden');
+}
+
+$refresh.on('click', function (e) {
+  e.preventDefault();
+  $('#video_url').trigger('change');
+});
+
 $('#video_url, #video_urls').on('keyup change paste', function() {
   var url = this.value;
 
   removeFinalStates();
   $('.video-states .initial').addClass('hidden');
   $('.video-states .loading').addClass('show');
+  $refresh.addClass('hidden');
 
   if ($(this).val().length === 0) {
     $('.video-states .initial').removeClass('hidden');
     $('.video-states .loading').removeClass('show');
     save();
   } else {
+    Fliplet.Widget.toggleSaveButton(false);
     clearTimeout(timer);
     timer = setTimeout(function() {
       oembed(url)
         .then(function(response) {
+          $refresh.removeClass('hidden');
+
           var bootstrapHtml = '<div class="embed-responsive embed-responsive-orientation">html</div>';
           data.orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
           data.embedly = response;
@@ -55,12 +70,14 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
           toDataUrl(response.thumbnail_url, function(base64Img) {
             data.thumbnail_base64 = base64Img;
             save(false);
+            Fliplet.Widget.toggleSaveButton(true);
           });
         })
         .catch(function () {
           data.html = '';
           changeStates(false);
           save(false);
+          Fliplet.Widget.toggleSaveButton(true);
         });
     }, TIMEOUT_BUFFER);
   }

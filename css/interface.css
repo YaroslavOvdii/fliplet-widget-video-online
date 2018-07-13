@@ -51,22 +51,6 @@
     color: #c9302c;
 }
 
-.streaming-video-loader {
-    position: relative;
-    width: 43px;
-    height: 42px;
-}
-
-.streaming-video-loader div {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    bottom: 4px;
-    left: 4px;
-    background: url('https://imgh.us/ring-alt_(5).svg') center center no-repeat;
-    background-size: contain;
-}
-
 .error {
     display: none;
     margin: 10px 0;

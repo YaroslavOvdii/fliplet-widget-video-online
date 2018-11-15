@@ -54,18 +54,25 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
     Fliplet.Widget.toggleSaveButton(false);
     clearTimeout(timer);
     timer = setTimeout(function() {
+      $('.helper-holder .warning').removeClass('show');
       oembed(url)
         .then(function(response) {
           $refresh.removeClass('hidden');
 
-          var bootstrapHtml = '<div class="embed-responsive embed-responsive-orientation">html</div>';
+          var bootstrapHtml = '<div class="embed-responsive embed-responsive-{{orientation}}">{{html}}</div>';
           data.orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
           data.embedly = response;
+          data.type = response.type;
           data.url = url;
           data.video_html = bootstrapHtml
-            .replace("html", response.html)
-            .replace("orientation", data.orientation)
+            .replace("{{html}}", response.html)
+            .replace("{{orientation}}", data.orientation)
             .replace("//cdn", "https://cdn");
+
+          if (response.type === 'link') {
+            $('.helper-holder .warning').addClass('show');
+          }
+
           changeStates(true);
           toDataUrl(response.thumbnail_url, function(base64Img) {
             data.thumbnail_base64 = base64Img;

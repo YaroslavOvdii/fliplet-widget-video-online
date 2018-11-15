@@ -10,6 +10,11 @@ $('[data-video-online-id]').each(function () {
           action: 'play_streaming_online',
           title: data.url
         });
+
+        if (data.type === 'link') {
+          Fliplet.Navigate.url(data.embedly.url);
+          return;
+        }
         $el.html(data.video_html);
       } else {
         Fliplet.Analytics.trackEvent({
@@ -17,6 +22,7 @@ $('[data-video-online-id]').each(function () {
           action: 'play_streaming_offline',
           title: data.url
         });
+
         Fliplet.Navigate.popup({
           popupTitle: 'Internet Unavailable',
           popupMessage: 'This video requires Internet to play. Please try again when Internet is available.'

@@ -57,6 +57,10 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
       $('.helper-holder .warning').removeClass('show');
       oembed(url)
         .then(function(response) {
+          if(response.type !== 'video' && response.type !=='link'){
+            changeStates(false);
+            return;
+          }
           $refresh.removeClass('hidden');
 
           var bootstrapHtml = '<div class="embed-responsive embed-responsive-{{orientation}}">{{html}}</div>';

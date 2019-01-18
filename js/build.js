@@ -7,8 +7,8 @@ $('[data-video-online-id]').each(function () {
       if (Fliplet.Navigator.isOnline()) {
         Fliplet.Analytics.trackEvent({
           category: 'video',
-          action: 'play_streaming_online',
-          title: data.url
+          action: 'load_stream_online',
+          label: data.url
         });
 
         if (data.type === 'link') {
@@ -16,11 +16,36 @@ $('[data-video-online-id]').each(function () {
           return;
         }
         $el.html(data.video_html);
+
+        // initialize the player.
+        var player = new playerjs.Player($el.find('iframe.embedly-embed')[0]);
+        // Wait for the player to be ready.
+        player.on(playerjs.EVENTS.READY, function () {
+          if (player.supports('event', playerjs.EVENTS.PLAY)) {
+            player.on(playerjs.EVENTS.PLAY, function (){
+              Fliplet.Analytics.trackEvent({
+                category: 'video',
+                action: 'play_stream',
+                label: data.url
+              });
+            });
+          };
+
+          if (player.supports('event', playerjs.EVENTS.PAUSE)) {
+            player.on(playerjs.EVENTS.PAUSE, function () {
+              Fliplet.Analytics.trackEvent({
+                category: 'video',
+                action: 'pause_stream',
+                label: data.url
+              });
+            });
+          };
+        });
       } else {
         Fliplet.Analytics.trackEvent({
           category: 'video',
-          action: 'play_streaming_offline',
-          title: data.url
+          action: 'load_stream_offline',
+          label: data.url
         });
 
         Fliplet.Navigate.popup({

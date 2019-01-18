@@ -25,7 +25,8 @@
     ],
     "assets": [
       "js/build.js",
-      "css/build.css"
+      "css/build.css",
+      "vendor/player-0.1.0.min.js"
     ]
   }
 }

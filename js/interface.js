@@ -4,6 +4,7 @@ var TIMEOUT_BUFFER = 1000; // Timeout buffer in ms
 var timer = null;
 
 var $refresh = $('[data-refresh]');
+var invalidUrlError = 'This URL is not supported for online embedding. See http://embed.ly/providers to learn more.';
 
 // 1. Fired from Fliplet Studio when the external save button is clicked
 Fliplet.Widget.onSaveRequest(function () {
@@ -20,13 +21,34 @@ function save(notifyComplete) {
   });
 }
 
-function oembed(url) {
+function oembed(options) {
+  options = options || {};
+
+  if (typeof options === 'string') {
+    options = {
+      url: options
+    };
+  }
+
   var params = {
-    url: url,
-    key: "81633801114e4d9f88027be15efb8169",
+    url: options.url,
+    key: '81633801114e4d9f88027be15efb8169',
     autoplay: true
   };
-  return $.getJSON('https://api.embedly.com/1/oembed?' + $.param(params));
+
+  return $.getJSON('https://api.embedly.com/1/oembed?' + $.param(params))
+    .then(function(response) {
+      if (!response.width || !response.height) {
+        // A size and thumbnail are required to render the output
+        return Promise.reject(invalidUrlError);
+      }
+
+      if (!response.thumbnail_url && options.validateThumbnail) {
+
+      }
+
+      return response;
+    });
 }
 
 if (data.url) {
@@ -38,7 +60,7 @@ $refresh.on('click', function (e) {
   $('#video_url').trigger('change');
 });
 
-$('#video_url, #video_urls').on('keyup change paste', function() {
+$('#video_url, #video_urls').on('input change', function() {
   var url = this.value;
 
   removeFinalStates();
@@ -50,53 +72,73 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
     $('.video-states .initial').removeClass('hidden');
     $('.video-states .loading').removeClass('show');
     save();
-  } else {
-    Fliplet.Widget.toggleSaveButton(false);
-    clearTimeout(timer);
-    timer = setTimeout(function() {
-      $('.helper-holder .warning').removeClass('show');
-      oembed(url)
-        .then(function(response) {
-          if (!response.width || !response.height || !response.thumbnail_url) {
-            // A size and thumbnail are required to render the output
-            return Promise.reject('This URL is not supported for online embedding. <a href="http://embed.ly/providers" target="_blank">See embedly documentation</a> to learn more.');
-          }
-
-          if(response.type !== 'video' && response.type !=='link'){
-            changeStates(false);
-            return;
-          }
-          $refresh.removeClass('hidden');
-
-          var bootstrapHtml = '<div class="embed-responsive embed-responsive-{{orientation}}">{{html}}</div>';
-          data.orientation = (response.width / response.height > 1.555 )? "16by9" : "4by3";
-          data.embedly = response;
-          data.type = response.type;
-          data.url = url;
-          data.video_html = bootstrapHtml
-            .replace("{{html}}", response.html)
-            .replace("{{orientation}}", data.orientation)
-            .replace("//cdn", "https://cdn");
-
-          if (response.type === 'link') {
-            $('.helper-holder .warning').addClass('show');
-          }
-
-          changeStates(true);
-          toDataUrl(response.thumbnail_url, function(base64Img) {
-            data.thumbnail_base64 = base64Img;
-            save(false);
-            Fliplet.Widget.toggleSaveButton(true);
-          });
-        })
-        .catch(function () {
-          data.html = '';
-          changeStates(false);
-          save(false);
-          Fliplet.Widget.toggleSaveButton(true);
-        });
-    }, TIMEOUT_BUFFER);
+    return;
   }
+
+  Fliplet.Widget.toggleSaveButton(false);
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+    $('.helper-holder .warning').removeClass('show');
+    oembed({
+      url: url,
+      validateThumbnail: false
+    })
+      .then(function(response) {
+        // No thumbnail found
+        if (!response.thumbnail_url && response.url && response.url !== url) {
+          // A new URL is given by embedly
+          // The original URL might have been a shortened URL
+          // Send it to embedly again for processing
+          return oembed({
+            url: response.url,
+            validateThumbnail: true
+          });
+        }
+
+        return response;
+      })
+      .then(function (response) {
+        // Validate thumbnail_url and convert to Base64 string
+        return toDataUrl(response.thumbnail_url).then(function (base64Img) {
+          response.thumbnail_base64 = base64Img;
+          return response;
+        });
+      })
+      .then(function (response) {
+        if(response.type !== 'video' && response.type !=='link'){
+          changeStates(false);
+          return;
+        }
+
+        $refresh.removeClass('hidden');
+
+        var bootstrapHtml = '<div class="embed-responsive embed-responsive-{{orientation}}">{{html}}</div>';
+
+        data.orientation = (response.width / response.height > 1.555 )? '16by9' : '4by3';
+        data.embedly = response;
+        data.type = response.type;
+        data.url = url;
+        data.video_html = bootstrapHtml
+          .replace('{{html}}', response.html)
+          .replace('{{orientation}}', data.orientation)
+          .replace('//cdn', 'https://cdn');
+        data.thumbnail_base64 = response.thumbnail_base64;
+
+        if (response.type === 'link') {
+          $('.helper-holder .warning').addClass('show');
+        }
+
+        changeStates(true);
+        save(false);
+        Fliplet.Widget.toggleSaveButton(true);
+      })
+      .catch(function () {
+        data.html = '';
+        changeStates(false);
+        save(false);
+        Fliplet.Widget.toggleSaveButton(true);
+      });
+  }, TIMEOUT_BUFFER);
 });
 
 $('#try-stream-single, #try-stream-multiple').on('click', function() {
@@ -124,17 +166,28 @@ function removeFinalStates() {
 }
 
 // http://stackoverflow.com/a/20285053/1978835
-function toDataUrl(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = 'blob';
-  xhr.onload = function() {
-    var reader = new FileReader();
-    reader.onloadend = function() {
-      callback(reader.result);
+function toDataUrl(url) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function () {
+      if (xhr.status >= 400) {
+        reject('Invalid thumbnail');
+        return;
+      }
+
+      var reader = new FileReader();
+
+      reader.onloadend = function() {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
     };
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open('GET', Fliplet.Env.get('apiUrl') + 'v1/communicate/proxy/' + url);
-  xhr.setRequestHeader('auth-token', Fliplet.User.getAuthToken());
-  xhr.send();
+    xhr.onerror = function (error) {
+      reject(error);
+    };
+    xhr.open('GET', Fliplet.Env.get('apiUrl') + 'v1/communicate/proxy/' + url);
+    xhr.setRequestHeader('auth-token', Fliplet.User.getAuthToken());
+    xhr.send();
+  });
 }

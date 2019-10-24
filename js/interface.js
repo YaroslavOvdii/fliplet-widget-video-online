@@ -57,6 +57,11 @@ $('#video_url, #video_urls').on('keyup change paste', function() {
       $('.helper-holder .warning').removeClass('show');
       oembed(url)
         .then(function(response) {
+          if (!response.width || !response.height || !response.thumbnail_url) {
+            // A size and thumbnail are required to render the output
+            return Promise.reject('This URL is not supported for online embedding. <a href="http://embed.ly/providers" target="_blank">See embedly documentation</a> to learn more.');
+          }
+
           if(response.type !== 'video' && response.type !=='link'){
             changeStates(false);
             return;

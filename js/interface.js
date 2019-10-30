@@ -4,7 +4,6 @@ var TIMEOUT_BUFFER = 1000; // Timeout buffer in ms
 var timer = null;
 
 var $refresh = $('[data-refresh]');
-var invalidUrlError = 'This URL is not supported for online embedding. See http://embed.ly/providers to learn more.';
 
 // 1. Fired from Fliplet Studio when the external save button is clicked
 Fliplet.Widget.onSaveRequest(function () {
@@ -40,11 +39,12 @@ function oembed(options) {
     .then(function(response) {
       if (!response.width || !response.height) {
         // A size and thumbnail are required to render the output
-        return Promise.reject(invalidUrlError);
+        return Promise.reject('This URL is not supported for online embedding. See http://embed.ly/providers to learn more.');
       }
 
       if (!response.thumbnail_url && options.validateThumbnail) {
-
+        // A size and thumbnail are required to render the output
+        return Promise.reject('Video thumbnail not found. Please try again later if the video is recently published.');
       }
 
       return response;

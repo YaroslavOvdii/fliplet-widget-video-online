@@ -48,3 +48,9 @@
     height: auto;
     cursor: pointer;
 }
+
+@media screen and (min-width: 480px) {
+    .video-wrapper .embed-responsive {
+        min-width: 80vw;
+    }
+}

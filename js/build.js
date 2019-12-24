@@ -1,9 +1,8 @@
-$('[data-video-online-id]').each(function () {
+Fliplet.Widget.instance('video-online', function (data) {
   var $el = $(this);
 
-  var data = Fliplet.Widget.getData($el.data('video-online-id'));
   $el.find('img')
-    .on('click', function() {
+    .on('click', function () {
       if (Fliplet.Navigator.isOnline()) {
         Fliplet.Analytics.trackEvent({
           category: 'video',
@@ -22,7 +21,7 @@ $('[data-video-online-id]').each(function () {
         // Wait for the player to be ready.
         player.on(playerjs.EVENTS.READY, function () {
           if (player.supports('event', playerjs.EVENTS.PLAY)) {
-            player.on(playerjs.EVENTS.PLAY, function (){
+            player.on(playerjs.EVENTS.PLAY, function () {
               Fliplet.Analytics.trackEvent({
                 category: 'video',
                 action: 'play_stream',
